@@ -11,10 +11,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"github.com/dgrijalva/jwt-go"
 	"strconv"
-<<<<<<< HEAD
 	"github.com/go-playground/validator/v10"
-=======
->>>>>>> 36433f5dece31ec952dc3bc3d73853f094e71528
 )
 
 func GetDB() (db *sql.DB, err error, w http.ResponseWriter) {
@@ -27,12 +24,11 @@ func GetDB() (db *sql.DB, err error, w http.ResponseWriter) {
 }
 
 type User struct {
-<<<<<<< HEAD
 	ID     		int  	`json:"id" validate:"isdefault"`
 	Fullname   	string 	`json:"fullname"`
 	Birthday  	string 	`json:"birthday"`
-	Email 		string 	`json:"email" validate:"required,email"` // fix validation later
-	Username 	string 	`json:"username" validate: "required"` // fix validation later
+	Email 		string 	`json:"email" validate:"required,email"`
+	Username 	string 	`json:"username" validate: "required"`
 	Password 	string 	`json:"password" validate: "required,min=6,max=32"` // fix validation later
 }
 
@@ -43,25 +39,7 @@ type Entry struct {
 }
 
 type LoginDetails struct {
-	Detail1 string `json:"email/username" validate:"required"`
-=======
-	ID     int  `json:"id"`
-	Fullname   string `json:"fullname"`
-	Birthday  string `json:"birthday"`
-	Email string `json:"email" validate:"required,email"` // fix validation later
-	Username string `json:"username" validate: "required"` // fix validation later
-	Password string `json:"password" validate: "required,min=6,max=32"` // fix validation later
-}
-
-type Entry struct {
-	Date string `"json:"date"`
-	UserID int `"json:userid"`
-	Content string `"json:userid"`
-}
-
-type LoginDetails struct {
 	Detail1 string `json:"email" | "username" validate:"required"`
->>>>>>> 36433f5dece31ec952dc3bc3d73853f094e71528
 	Password string `json:"password" validate:"required"`
 }
 
@@ -90,7 +68,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-<<<<<<< HEAD
 
 	validate := validator.New()
 	er := validate.Struct(user)
@@ -98,8 +75,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, er.(validator.ValidationErrors).Error())
 		return
 	}
-=======
->>>>>>> 36433f5dece31ec952dc3bc3d73853f094e71528
 	// check if email is already used
 	dbuser := QueryUser(user.Email)
 	if dbuser.Email != "" {
@@ -142,15 +117,12 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	var details LoginDetails
 	_ = json.NewDecoder(r.Body).Decode(&details)
 	var user User
-<<<<<<< HEAD
 	validate := validator.New()
 	er := validate.Struct(details)
 	if er != nil {
 		respondWithError(w, http.StatusBadRequest, er.(validator.ValidationErrors).Error())
 		return
 	}
-=======
->>>>>>> 36433f5dece31ec952dc3bc3d73853f094e71528
 	err1 := db.QueryRow("SELECT * FROM user WHERE (Email=? OR Username=?)", details.Detail1, details.Detail1).Scan(&user.ID, &user.Fullname, &user.Birthday, &user.Email, &user.Username, &user.Password)
 	if err1 != nil {
 		respondWithError(w, http.StatusBadRequest, err.Error())
@@ -165,8 +137,6 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Password is incorrect.")
 		return
 	}
-	// generate Jwt token
-	// user = QueryUser(user.Email)
 	claims := jwt.MapClaims{}
 	claims["UserID"] = user.ID
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -226,11 +196,8 @@ func GetEntries(w http.ResponseWriter, r *http.Request) {
 	quarter := r.URL.Query().Get("q")
 	year := r.URL.Query().Get("y")
 
-<<<<<<< HEAD
-	entries, err2 := db.Query("SELECT (Date, UserID, Content) FROM entry WHERE (UserID=? AND QUARTER(Date) AND YEAR(Date)) ORDER BY Date ASC", id, quarter, year)
-=======
-	entries, err2 := db.Query("SELECT * FROM entry WHERE (UserID=? AND QUARTER(Date) AND YEAR(Date)) ORDER BY Date ASC", id, quarter, year)
->>>>>>> 36433f5dece31ec952dc3bc3d73853f094e71528
+	entries, err2 := db.Query("SELECT (Date, UserID, Content) FROM entry WHERE (UserID=? AND QUARTER(Date)=? AND YEAR(Date)=?) ORDER BY Date ASC", id, quarter, year)
+
 	if err2 != nil {
 		respondWithError(w, http.StatusBadRequest, err.Error())
 		return
@@ -260,15 +227,13 @@ func CreateEntry(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(i)
 	var entry Entry
 	_ = json.NewDecoder(r.Body).Decode(&entry)
-<<<<<<< HEAD
+
 	validate := validator.New()
 	er := validate.Struct(entry)
 	if er != nil {
 		respondWithError(w, http.StatusBadRequest, er.(validator.ValidationErrors).Error())
 		return
 	}
-=======
->>>>>>> 36433f5dece31ec952dc3bc3d73853f094e71528
 	var content string
 	err1 := db.QueryRow("SELECT Content FROM entry WHERE (UserID=? AND Date=?)", id, entry.Date).Scan(&content)
 	if err1 != nil {
