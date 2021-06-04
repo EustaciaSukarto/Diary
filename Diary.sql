@@ -4,7 +4,7 @@ CREATE TABLE user (
     Birthday date,
     Email varchar(45) NOT NULL UNIQUE,
     Username varchar(45) NOT NULL UNIQUE,
-    Password varchar(45) NOT NULL,
+    Password longtext NOT NULL,
     PRIMARY KEY (ID)
 );
 CREATE TABLE entry (

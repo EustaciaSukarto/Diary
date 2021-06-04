@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"encoding/json"
 	"books/models"
@@ -18,6 +19,7 @@ func CheckPasswordHash(password string, hash string) bool {
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if err := db.DB.Ping(); err != nil {
+		log.Fatal(err)
 		response.RespondWithError(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -31,6 +33,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err1 := db.DB.QueryRow("SELECT * FROM user WHERE (Email=? OR Username=?)", details.Detail1, details.Detail1).Scan(&user.ID, &user.Fullname, &user.Birthday, &user.Email, &user.Username, &user.Password)
 	if err1 != nil {
+		log.Fatal(err1)
 		response.RespondWithError(w, http.StatusBadRequest, err1.Error())
 		return
 	}
@@ -48,8 +51,9 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err2 := token.SignedString([]byte("secret"))
 	if err2 != nil {
+		log.Fatal(err2)
 		response.RespondWithError(w, http.StatusBadRequest, err2.Error())
 		return
 	}
-	response.RespondWithJson(w, http.StatusOK, signedToken)
+	response.RespondWithJson(w, http.StatusOK, "AuthToken:" + signedToken)
 }

@@ -14,6 +14,7 @@ import (
 func main() {
 	err := db.Init()
 	if err != nil {
+		log.Fatal(err)
 		return
 	}
 	defer db.CloseAll()
@@ -22,7 +23,7 @@ func main() {
 	// Routes
 	r.HandleFunc("/api/register", controllers.CreateUser).Methods("POST")
 	r.HandleFunc("/api/login", controllers.LoginUser).Methods("POST")
-	r.HandleFunc("/api/user/entries/:q/:y", auth.Authenticate(http.HandlerFunc(controllers.GetEntries))).Methods("GET")
+	r.HandleFunc("/api/user/entries/{q}/{y}", auth.Authenticate(http.HandlerFunc(controllers.GetEntries))).Methods("GET")
 	r.HandleFunc("/api/user/newentry", auth.Authenticate(http.HandlerFunc(controllers.CreateEntry))).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(":8000", r))
