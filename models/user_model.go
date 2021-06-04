@@ -1,7 +1,7 @@
 package models
 
 import (
-	"log"
+	// "log"
 	"github.com/go-playground/validator/v10"
 	"books/db"
 	// "unicode"
@@ -35,19 +35,19 @@ func PasswordValidator(pw string) string {
 	}
 	for _, character := range pw {
 		if (character >= 65 && character <= 90) {
-			log.Print(character)
+			// log.Print(character)
 			rules[0] = true
 		}
 		if (character >= 97 && character <= 122) {
-			log.Print(character)
+			// log.Print(character)
 			rules[1] = true
 		}
 		if (character >= 48 && character <= 57) {
-			log.Print(character)
+			// log.Print(character)
 			rules[2] = true
 		}
 		if ((character >= 32 && character <= 47) || (character >= 58 && character <= 64) || (character >= 91 && character <= 96) || (character >= 123 && character <= 126)) {
-			log.Print(character)
+			// log.Print(character)
 			rules[3] = true
 		}
 	}
