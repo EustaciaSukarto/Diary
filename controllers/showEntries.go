@@ -26,7 +26,7 @@ func GetEntries(w http.ResponseWriter, r *http.Request) {
 	quarter := params["q"]
 	year := params["y"]
 
-	entries, err2 := db.DB.Query("SELECT Date, UserID, Content FROM entry WHERE (UserID=? AND QUARTER(Date)=? AND YEAR(Date)=?) ORDER BY Date ASC", id, quarter, year)
+	entries, err2 := db.DB.Query("SELECT ID, Date, UserID, Content FROM entry WHERE (UserID=? AND QUARTER(Date)=? AND YEAR(Date)=?) ORDER BY Date ASC", id, quarter, year)
 
 	if err2 != nil {
 		log.Fatal(err2)
@@ -36,7 +36,7 @@ func GetEntries(w http.ResponseWriter, r *http.Request) {
 	var entry models.Entry
 	var display []models.Entry
 	for entries.Next() {
-		err3 := entries.Scan(&entry.Date, &entry.UserID, &entry.Content)
+		err3 := entries.Scan(&entry.ID, &entry.Date, &entry.UserID, &entry.Content)
 		if err3 != nil {
 			log.Fatal(err3)
 			response.RespondWithError(w, http.StatusBadRequest, err3.Error())

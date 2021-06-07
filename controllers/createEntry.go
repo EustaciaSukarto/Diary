@@ -36,15 +36,20 @@ func CreateEntry(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	ent, err1 := models.QueryEntry(id, entry.Date)
-	if err1.Error() == "sql: no rows in result set" {
-		err1 = nil
-	}
-	if err1 != nil {
-		log.Fatal(err1)
-		response.RespondWithError(w, http.StatusBadRequest, err1.Error())
-		return
-	}
+	ent, _ := models.QueryEntry(id, entry.Date)
+	// log.Print(err1.Error())
+	// if err1.Error() == "sql: no rows in result set" {
+	// 	log.Print("no")
+	// 	err1 = nil
+	// }
+	// if err1 != nil {
+	// 	log.Print("err")
+	// 	log.Fatal(err1)
+	// 	response.RespondWithError(w, http.StatusBadRequest, err1.Error())
+	// 	return
+	// } else {
+	// 	log.Print("content")
+	// }
 	if ent.Content == "" {
 		new, err2 := db.DB.Prepare("INSERT INTO entry (Date, UserID, Content) VALUES (?,?,?)")
 		if err2 != nil {
@@ -60,7 +65,7 @@ func CreateEntry(w http.ResponseWriter, r *http.Request) {
 		}
 		display, err4 := models.QueryEntry(id, entry.Date)
 		if err4 != nil {
-			log.Fatal(err3)
+			log.Fatal(err4)
 			response.RespondWithError(w, http.StatusBadRequest, err4.Error())
 			return
 		}
@@ -80,7 +85,7 @@ func CreateEntry(w http.ResponseWriter, r *http.Request) {
 		}
 		display, err4 := models.QueryEntry(id, entry.Date)
 		if err4 != nil {
-			log.Fatal(err3)
+			log.Fatal(err4)
 			response.RespondWithError(w, http.StatusBadRequest, err4.Error())
 			return
 		}

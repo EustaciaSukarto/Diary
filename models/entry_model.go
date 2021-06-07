@@ -21,6 +21,10 @@ type EntryInput struct {
 
 func QueryEntry(userid int, date string) (entry Entry, err error) {
 	err = db.DB.QueryRow("SELECT ID, Date, UserID, Content FROM entry WHERE (UserID=? AND Date=?)", userid, date).Scan(&entry.ID, &entry.Date, &entry.UserID, &entry.Content)
+	// log.Print(entry.ID)
+	// log.Print(entry.Date)
+	// log.Print(entry.UserID)
+	// log.Print(entry.Content)
 	return
 }
 
